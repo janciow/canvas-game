@@ -15,5 +15,13 @@ module.exports = {
       filename: 'index.html',
       template: './src/index.html'
     })
-  ]
-}
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: ['file-loader']
+      }
+    ]
+  }
+};
