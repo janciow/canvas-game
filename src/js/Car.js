@@ -50,8 +50,7 @@ export function carMove(carParams, carMovement, keyHeld) {
   return carMovement;
 }
 
-export function carDraw(canvasContext, carMovement, carPicLoaded, carPic) {
-  if (carPicLoaded) {
+export function carDraw(canvasContext, carMovement, carPic) {
     drawBitmapCentredWithRotation(
       carPic,
       carMovement.carX,
@@ -59,5 +58,4 @@ export function carDraw(canvasContext, carMovement, carPicLoaded, carPic) {
       carMovement.carAng,
       canvasContext
     );
-  }
 }
