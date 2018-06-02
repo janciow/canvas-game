@@ -49,9 +49,9 @@ export function isObstacleAtColRow(col, row, track) {
   }
 }
 
-export function carTrackHandling(track, carMovement) {
-  var carTrackCol = Math.floor(carMovement.carX / track.TRACK_W);
-  var carTrackRow = Math.floor(carMovement.carY / track.TRACK_H);
+export function carTrackHandling(track, whichCar) {
+  var carTrackCol = Math.floor(whichCar.x / track.TRACK_W);
+  var carTrackRow = Math.floor(whichCar.y / track.TRACK_H);
   var trackIndexUnderCar = rowColToArrayIndex(carTrackCol, carTrackRow, track);
 
   if (
@@ -61,41 +61,28 @@ export function carTrackHandling(track, carMovement) {
     carTrackRow < track.TRACK_ROWS
   ) {
     if (isObstacleAtColRow(carTrackCol, carTrackRow, track)) {
-      carMovement.carX -= Math.cos(carMovement.carAng) * carMovement.carSpeed;
-      carMovement.carY -= Math.sin(carMovement.carAng) * carMovement.carSpeed;
-      carMovement.carSpeed *= -0.5;
+      whichCar.x -= Math.cos(whichCar.ang) * whichCar.speed;
+      whichCar.y -= Math.sin(whichCar.ang) * whichCar.speed;
+      whichCar.speed *= -0.5;
     }
   }
-  return carMovement;
+
+  return whichCar
 }
 
-export function drawTracks(track, canvasContext, ...pic) {
+export function drawTracks(track, canvasContext, trackPics) {
+  var arrayIndex = 0;
+  var drawTileX = 0;
+  var drawTileY = 0;
   for (var eachRow = 0; eachRow < track.TRACK_ROWS; eachRow++) {
     for (var eachCol = 0; eachCol < track.TRACK_COLS; eachCol++) {
-      var arrayIndex = rowColToArrayIndex(eachCol, eachRow, track);
       var tileKindHere = trackGrid[arrayIndex];
-      var useImg;
-
-
-      switch(tileKindHere) {
-        case track.TRACK_ROAD:
-          useImg = pic[1]
-          break;
-        case track.TRACK_WALL: 
-          useImg = pic[0]
-          break;
-          case track.TRACK_GOAL:
-          useImg = pic[2]
-          break;
-        case track.TRACK_TREE: 
-          useImg = pic[3]
-          break;
-          case track.TRACK_FLAG:
-          useImg = pic[4]
-          break;
-      }
-
-      canvasContext.drawImage(useImg, track.TRACK_W * eachCol, track.TRACK_H * eachRow );
+      var useImg = trackPics[tileKindHere];
+      canvasContext.drawImage(useImg, drawTileX, drawTileY );
+      drawTileX += track.TRACK_W;
+      arrayIndex++;
     }
+    drawTileY += track.TRACK_H;
+    drawTileX = 0;
   }
 }

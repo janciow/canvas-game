@@ -11,17 +11,13 @@ import trackGoal from './../img/track_goal.png';
 import trackFlag from './../img/track_flag.png';
 import trackTree from './../img/track_tree.png';
 import { colorRect, colorText } from './GraphicsCommon';
-import { carParams, carReset, carMove, carDraw } from './Car';
+import { carParams, Car } from './Car';
 import { rowColToArrayIndex } from './utils/row-colto-array-index';
 import { keyPressed, keyReleased } from './Input';
 
 import {
   carPic,
-  wallPic,
-  roadPic,
-  treePic,
-  flagPic,
-  goalPic
+  trackPics
 } from './ImageLoading';
 
 var picsToLoad = 0;
@@ -57,20 +53,31 @@ function beginLoadingImage(imgVar, fileName) {
   imgVar.src = fileName;
 }
 
+function loadImageForTrackCode(trackCode, fileName) {
+  trackPics[trackCode] = document.createElement("img");
+  beginLoadingImage(trackPics[trackCode], fileName);
+}
+
+
 function loadImages() {
   var imageList = [
     { varName: carPic, theFile: player1car },
-    { varName: wallPic, theFile: trackWall },
-    { varName: roadPic, theFile: trackRoad },
-    { varName: flagPic, theFile: trackFlag },
-    { varName: goalPic, theFile: trackGoal },
-    { varName: treePic, theFile: trackTree }
+    { trackType: track.TRACK_WALL, theFile: trackWall },
+    { trackType: track.TRACK_ROAD, theFile: trackRoad },
+    { trackType: track.TRACK_FLAG, theFile: trackFlag },
+    { trackType: track.TRACK_GOAL, theFile: trackGoal },
+    { trackType: track.TRACK_TREE, theFile: trackTree }
   ];
 
   picsToLoad = imageList.length;
 
-  imageList.forEach(item => {
-    beginLoadingImage(item.varName, item.theFile);
+  imageList.forEach((item, index) => {
+    if (item.varName !== undefined) {
+      beginLoadingImage(item.varName, item.theFile);
+    } else {
+      loadImageForTrackCode(item.trackType, item.theFile)
+    }
+   
   });
 }
 
@@ -92,6 +99,8 @@ function updateMousePos(event) {
   mouseY = event.clientY - rectangle.top - root.scrollTop;
 }
 
+var blueCar = new Car();
+
 window.onload = function() {
   canvas = document.getElementById('gameCanvas');
   canvasContext = canvas.getContext('2d');
@@ -111,9 +120,8 @@ window.onload = function() {
 function imageLoadingDoneSoStartGame() {
   var framesPerSecond = 30;
   setInterval(updateAll, 1000 / framesPerSecond);
-
   setupInput();
-  carMovement = carReset(track, trackGrid, carMovement);
+  blueCar.reset(track, trackGrid);
 }
 
 function updateAll() {
@@ -122,11 +130,11 @@ function updateAll() {
 }
 
 function moveAll() {
-  carMovement = carMove(carParams, carMovement, keyHeld);
-  carMovement = carTrackHandling(track, carMovement);
+  blueCar.move(carParams, keyHeld);
+  blueCar = carTrackHandling(track, blueCar);
 }
 
 function drawAll() {
-  drawTracks(track, canvasContext, wallPic, roadPic, goalPic, treePic, flagPic );
-  carDraw(canvasContext, carMovement, carPic);
+  drawTracks(track, canvasContext, trackPics );
+  blueCar.draw(canvasContext, carPic)
 }
