@@ -1,10 +1,6 @@
-import {
-  trackGrid,
-  track,
-  drawTracks,
-  carTrackHandling
-} from './Track';
+import { trackGrid, track, drawTracks } from './Track';
 import player1car from './../img/player1car.png';
+import player2car from './../img/player2car.png';
 import trackRoad from './../img/track_road.png';
 import trackWall from './../img/track_wall.png';
 import trackGoal from './../img/track_goal.png';
@@ -15,26 +11,19 @@ import { carParams, Car } from './Car';
 import { rowColToArrayIndex } from './utils/row-colto-array-index';
 import { keyPressed, keyReleased } from './Input';
 
-import {
-  carPic,
-  trackPics
-} from './ImageLoading';
+import { carPic,carPic2 ,trackPics } from './ImageLoading';
 
 var picsToLoad = 0;
 
-var carMovement = {
-  carX: 75,
-  carY: 75,
-  carAng: 0,
-  carSpeed: 0
-};
+const KEY_LEFT_ARROW = 37;
+const KEY_UP_ARROW = 38;
+const KEY_RIGHT_ARROW = 39;
+const KEY_DOWN_ARROW = 40;
 
-var keyHeld = {
-  keyHeld_Gas: false,
-  keyHeld_Reverse: false,
-  keyHeld_TurnLeft: false,
-  keyHeld_TurnRight: false
-};
+const KEY_W = 87;
+const KEY_D = 68;
+const KEY_S = 83;
+const KEY_A = 65;
 
 var canvas, canvasContext;
 
@@ -54,14 +43,14 @@ function beginLoadingImage(imgVar, fileName) {
 }
 
 function loadImageForTrackCode(trackCode, fileName) {
-  trackPics[trackCode] = document.createElement("img");
+  trackPics[trackCode] = document.createElement('img');
   beginLoadingImage(trackPics[trackCode], fileName);
 }
-
 
 function loadImages() {
   var imageList = [
     { varName: carPic, theFile: player1car },
+    { varName: carPic2, theFile: player2car },
     { trackType: track.TRACK_WALL, theFile: trackWall },
     { trackType: track.TRACK_ROAD, theFile: trackRoad },
     { trackType: track.TRACK_FLAG, theFile: trackFlag },
@@ -75,19 +64,24 @@ function loadImages() {
     if (item.varName !== undefined) {
       beginLoadingImage(item.varName, item.theFile);
     } else {
-      loadImageForTrackCode(item.trackType, item.theFile)
+      loadImageForTrackCode(item.trackType, item.theFile);
     }
-   
   });
 }
 
 function setupInput() {
   canvas.addEventListener('mousemove', updateMousePos);
+
+  greenCar.setupInput(KEY_W,KEY_D,KEY_S, KEY_A)
+  blueCar.setupInput(KEY_UP_ARROW,KEY_RIGHT_ARROW,KEY_DOWN_ARROW, KEY_LEFT_ARROW)
+
   document.addEventListener('keydown', function() {
-    keyHeld = keyPressed(event, keyHeld);
+    greenCar = keyPressed(event, greenCar);
+    blueCar = keyPressed(event, blueCar);
   });
   document.addEventListener('keyup', function() {
-    keyHeld = keyReleased(event, keyHeld);
+    greenCar = keyReleased(event, greenCar);
+    blueCar = keyReleased(event, blueCar);
   });
 }
 
@@ -100,6 +94,7 @@ function updateMousePos(event) {
 }
 
 var blueCar = new Car();
+var greenCar = new Car();
 
 window.onload = function() {
   canvas = document.getElementById('gameCanvas');
@@ -121,7 +116,8 @@ function imageLoadingDoneSoStartGame() {
   var framesPerSecond = 30;
   setInterval(updateAll, 1000 / framesPerSecond);
   setupInput();
-  blueCar.reset(track, trackGrid);
+  greenCar.reset(carPic);
+  blueCar.reset(carPic2);
 }
 
 function updateAll() {
@@ -130,11 +126,12 @@ function updateAll() {
 }
 
 function moveAll() {
-  blueCar.move(carParams, keyHeld);
-  blueCar = carTrackHandling(track, blueCar);
+  greenCar.move(carParams);
+  blueCar.move(carParams);
 }
 
 function drawAll() {
-  drawTracks(track, canvasContext, trackPics );
-  blueCar.draw(canvasContext, carPic)
+  drawTracks(track, canvasContext, trackPics);
+  greenCar.draw(canvasContext);
+  blueCar.draw(canvasContext);
 }

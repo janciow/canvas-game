@@ -1,45 +1,31 @@
-const KEY_LEFT_ARROW = 37;
-const KEY_UP_ARROW = 38;
-const KEY_RIGHT_ARROW = 39;
-const KEY_DOWN_ARROW = 40;
-
-export function keyPressed(event, keyHeld) {
-  if (event.keyCode === KEY_LEFT_ARROW) {
-    keyHeld.keyHeld_TurnLeft = true;
+function keySet(event, setTo, whichCar) {
+  if (event.keyCode === whichCar.controlKeyLeft) {
+    whichCar.keyHeld_TurnLeft = setTo;
   }
 
-  if (event.keyCode === KEY_RIGHT_ARROW) {
-    keyHeld.keyHeld_TurnRight = true;
+  if (event.keyCode === whichCar.controlKeyRight) {
+    whichCar.keyHeld_TurnRight = setTo;
   }
 
-  if (event.keyCode === KEY_UP_ARROW) {
-    keyHeld.keyHeld_Gas = true;
+  if (event.keyCode === whichCar.controlKeyUp) {
+    whichCar.keyHeld_Gas = setTo;
   }
 
-  if (event.keyCode === KEY_DOWN_ARROW) {
-    keyHeld.keyHeld_Reverse = true;
+  if (event.keyCode === whichCar.controlKeyDown) {
+    whichCar.keyHeld_Reverse = setTo;
   }
-  event.preventDefault();
-
-  return keyHeld;
+  return whichCar;
 }
 
-export function keyReleased(event, keyHeld) {
-  if (event.keyCode === KEY_LEFT_ARROW) {
-    keyHeld.keyHeld_TurnLeft = false;
-  }
 
-  if (event.keyCode === KEY_RIGHT_ARROW) {
-    keyHeld.keyHeld_TurnRight = false;
-  }
-
-  if (event.keyCode === KEY_UP_ARROW) {
-    keyHeld.keyHeld_Gas = false;
-  }
-
-  if (event.keyCode === KEY_DOWN_ARROW) {
-    keyHeld.keyHeld_Reverse = false;
-  }
+export function keyPressed(event, whichCar) {
+  whichCar = keySet(event, true, whichCar) 
   event.preventDefault();
-  return keyHeld;
+  return whichCar;
+}
+
+export function keyReleased(event, whichCar) {
+  whichCar = keySet(event, false, whichCar) 
+  event.preventDefault();
+  return whichCar;
 }

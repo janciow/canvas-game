@@ -16,7 +16,7 @@ export const track = {
  }
 
 export const trackGrid = [  1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1,
-                            1,0,3,0,0, 0,0,0,0,0, 0,0,0,0,1, 4,2,0,0,1,
+                            1,0,3,0,0, 0,0,0,0,0, 0,0,0,0,1, 4,2,2,0,1,
                             1,0,3,0,0, 0,0,0,0,0, 0,0,0,0,1, 4,0,0,0,1,
                             1,4,1,1,1, 1,1,1,1,1, 1,0,0,0,1, 1,0,0,0,1,
                             1,1,1,0,0, 1,4,4,0,1, 0,0,0,0,0, 1,0,0,0,1,
@@ -66,8 +66,6 @@ export function carTrackHandling(track, whichCar) {
       whichCar.speed *= -0.5;
     }
   }
-
-  return whichCar
 }
 
 export function drawTracks(track, canvasContext, trackPics) {
