@@ -1,17 +1,17 @@
-import { trackGrid, track, drawTracks } from './Track';
-import player1car from './../img/player1car.png';
-import player2car from './../img/player2car.png';
-import trackRoad from './../img/track_road.png';
-import trackWall from './../img/track_wall.png';
-import trackGoal from './../img/track_goal.png';
-import trackFlag from './../img/track_flag.png';
-import trackTree from './../img/track_tree.png';
+import { WorldGrid, World, drawWorlds } from './World';
+import player1Warrior from './../img/player1Warrior.png';
+import player2Warrior from './../img/player2Warrior.png';
+import WorldRoad from './../img/World_road.png';
+import WorldWall from './../img/World_wall.png';
+import WorldGoal from './../img/World_goal.png';
+import WorldFlag from './../img/World_flag.png';
+import WorldTree from './../img/World_tree.png';
 import { colorRect, colorText } from './GraphicsCommon';
-import { carParams, Car } from './Car';
+import { WarriorParams, Warrior } from './Warrior';
 import { rowColToArrayIndex } from './utils/row-colto-array-index';
 import { keyPressed, keyReleased } from './Input';
 
-import { carPic,carPic2 ,trackPics } from './ImageLoading';
+import { WarriorPic,WarriorPic2 ,WorldPics } from './ImageLoading';
 
 var picsToLoad = 0;
 
@@ -42,20 +42,20 @@ function beginLoadingImage(imgVar, fileName) {
   imgVar.src = fileName;
 }
 
-function loadImageForTrackCode(trackCode, fileName) {
-  trackPics[trackCode] = document.createElement('img');
-  beginLoadingImage(trackPics[trackCode], fileName);
+function loadImageForWorldCode(WorldCode, fileName) {
+  WorldPics[WorldCode] = document.createElement('img');
+  beginLoadingImage(WorldPics[WorldCode], fileName);
 }
 
 function loadImages() {
   var imageList = [
-    { varName: carPic, theFile: player1car },
-    { varName: carPic2, theFile: player2car },
-    { trackType: track.TRACK_WALL, theFile: trackWall },
-    { trackType: track.TRACK_ROAD, theFile: trackRoad },
-    { trackType: track.TRACK_FLAG, theFile: trackFlag },
-    { trackType: track.TRACK_GOAL, theFile: trackGoal },
-    { trackType: track.TRACK_TREE, theFile: trackTree }
+    { varName: WarriorPic, theFile: player1Warrior },
+    { varName: WarriorPic2, theFile: player2Warrior },
+    { WorldType: World.World_WALL, theFile: WorldWall },
+    { WorldType: World.World_ROAD, theFile: WorldRoad },
+    { WorldType: World.World_FLAG, theFile: WorldFlag },
+    { WorldType: World.World_GOAL, theFile: WorldGoal },
+    { WorldType: World.World_TREE, theFile: WorldTree }
   ];
 
   picsToLoad = imageList.length;
@@ -64,7 +64,7 @@ function loadImages() {
     if (item.varName !== undefined) {
       beginLoadingImage(item.varName, item.theFile);
     } else {
-      loadImageForTrackCode(item.trackType, item.theFile);
+      loadImageForWorldCode(item.WorldType, item.theFile);
     }
   });
 }
@@ -72,16 +72,16 @@ function loadImages() {
 function setupInput() {
   canvas.addEventListener('mousemove', updateMousePos);
 
-  greenCar.setupInput(KEY_W,KEY_D,KEY_S, KEY_A)
-  blueCar.setupInput(KEY_UP_ARROW,KEY_RIGHT_ARROW,KEY_DOWN_ARROW, KEY_LEFT_ARROW)
+  greenWarrior.setupInput(KEY_W,KEY_D,KEY_S, KEY_A)
+  blueWarrior.setupInput(KEY_UP_ARROW,KEY_RIGHT_ARROW,KEY_DOWN_ARROW, KEY_LEFT_ARROW)
 
   document.addEventListener('keydown', function() {
-    greenCar = keyPressed(event, greenCar);
-    blueCar = keyPressed(event, blueCar);
+    greenWarrior = keyPressed(event, greenWarrior);
+    blueWarrior = keyPressed(event, blueWarrior);
   });
   document.addEventListener('keyup', function() {
-    greenCar = keyReleased(event, greenCar);
-    blueCar = keyReleased(event, blueCar);
+    greenWarrior = keyReleased(event, greenWarrior);
+    blueWarrior = keyReleased(event, blueWarrior);
   });
 }
 
@@ -93,8 +93,8 @@ function updateMousePos(event) {
   mouseY = event.clientY - rectangle.top - root.scrollTop;
 }
 
-var blueCar = new Car();
-var greenCar = new Car();
+var blueWarrior = new Warrior();
+var greenWarrior = new Warrior();
 
 window.onload = function() {
   canvas = document.getElementById('gameCanvas');
@@ -116,8 +116,8 @@ function imageLoadingDoneSoStartGame() {
   var framesPerSecond = 30;
   setInterval(updateAll, 1000 / framesPerSecond);
   setupInput();
-  greenCar.reset(carPic);
-  blueCar.reset(carPic2);
+  greenWarrior.reset(WarriorPic);
+  blueWarrior.reset(WarriorPic2);
 }
 
 function updateAll() {
@@ -126,12 +126,12 @@ function updateAll() {
 }
 
 function moveAll() {
-  greenCar.move(carParams);
-  blueCar.move(carParams);
+  greenWarrior.move(WarriorParams);
+  blueWarrior.move(WarriorParams);
 }
 
 function drawAll() {
-  drawTracks(track, canvasContext, trackPics);
-  greenCar.draw(canvasContext);
-  blueCar.draw(canvasContext);
+  drawWorlds(World, canvasContext, WorldPics);
+  greenWarrior.draw(canvasContext);
+  blueWarrior.draw(canvasContext);
 }

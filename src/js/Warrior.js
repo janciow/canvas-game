@@ -1,8 +1,8 @@
 import { rowColToArrayIndex } from './utils/row-colto-array-index';
-import { trackGrid, carTrackHandling, track } from './Track';
+import { WorldGrid, WarriorWorldHandling, World } from './World';
 import { drawBitmapCentredWithRotation } from './GraphicsCommon';
 
-export const carParams = {
+export const WarriorParams = {
   GROUNDSPEED_DECAY_MULT: 0.94,
   DRIVE_POWER: 0.5,
   REVERSE_POWER: 0.2,
@@ -10,13 +10,13 @@ export const carParams = {
   MIN_SPEED_TO_TURN: 0
 };
 
-export class Car {
+export class Warrior {
   constructor() {
     this.x = 75;
     this.y = 75;
     this.ang = 0;
     this.speed = 0;
-    this.myCarPic;
+    this.myWarriorPic;
 
     this.keyHeld_Gas = false;
     this.keyHeld_Reverse = false;
@@ -37,50 +37,50 @@ export class Car {
   }
 
   reset(whichImage) {
-    this.myCarPic = whichImage;
-    for (var eachRow = 0; eachRow < track.TRACK_ROWS; eachRow++) {
-      for (var eachCol = 0; eachCol < track.TRACK_COLS; eachCol++) {
-        var arrayIndex = rowColToArrayIndex(eachCol, eachRow, track);
+    this.myWarriorPic = whichImage;
+    for (var eachRow = 0; eachRow < World.World_ROWS; eachRow++) {
+      for (var eachCol = 0; eachCol < World.World_COLS; eachCol++) {
+        var arrayIndex = rowColToArrayIndex(eachCol, eachRow, World);
 
-        if (trackGrid[arrayIndex] === track.TRACK_PLAYER_START) {
-          trackGrid[arrayIndex] = track.TRACK_ROAD;
+        if (WorldGrid[arrayIndex] === World.World_PLAYER_START) {
+          WorldGrid[arrayIndex] = World.World_ROAD;
           this.ang = Math.PI / 2;
-          this.x = eachCol * track.TRACK_W + track.TRACK_W / 2;
-          this.y = eachRow * track.TRACK_H + track.TRACK_H / 2;
+          this.x = eachCol * World.World_W + World.World_W / 2;
+          this.y = eachRow * World.World_H + World.World_H / 2;
           return;
         }
       }
     }
   };
 
-  move(carParams) {
-    this.speed *= carParams.GROUNDSPEED_DECAY_MULT;
+  move(WarriorParams) {
+    this.speed *= WarriorParams.GROUNDSPEED_DECAY_MULT;
 
     if (this.keyHeld_Gas) {
-      this.speed += carParams.DRIVE_POWER;
+      this.speed += WarriorParams.DRIVE_POWER;
     }
     if (this.keyHeld_Reverse) {
-      this.speed -= carParams.REVERSE_POWER;
+      this.speed -= WarriorParams.REVERSE_POWER;
     }
 
-    if (Math.abs(this.speed) > carParams.MIN_SPEED_TO_TURN) {
+    if (Math.abs(this.speed) > WarriorParams.MIN_SPEED_TO_TURN) {
       if (this.keyHeld_TurnLeft) {
-        this.ang -= carParams.TURN_RATE;
+        this.ang -= WarriorParams.TURN_RATE;
       }
       if (this.keyHeld_TurnRight) {
-        this.ang += carParams.TURN_RATE;
+        this.ang += WarriorParams.TURN_RATE;
       }
     }
 
     this.x += Math.cos(this.ang) * this.speed;
     this.y += Math.sin(this.ang) * this.speed;
 
-    carTrackHandling(track, this)
+    WarriorWorldHandling(World, this)
   }
 
   draw(canvasContext) {
     drawBitmapCentredWithRotation(
-      this.myCarPic,
+      this.myWarriorPic,
       this.x,
       this.y,
       this.ang,

@@ -1,31 +1,31 @@
-function keySet(event, setTo, whichCar) {
-  if (event.keyCode === whichCar.controlKeyLeft) {
-    whichCar.keyHeld_TurnLeft = setTo;
+function keySet(event, setTo, whichWarrior) {
+  if (event.keyCode === whichWarrior.controlKeyLeft) {
+    whichWarrior.keyHeld_TurnLeft = setTo;
   }
 
-  if (event.keyCode === whichCar.controlKeyRight) {
-    whichCar.keyHeld_TurnRight = setTo;
+  if (event.keyCode === whichWarrior.controlKeyRight) {
+    whichWarrior.keyHeld_TurnRight = setTo;
   }
 
-  if (event.keyCode === whichCar.controlKeyUp) {
-    whichCar.keyHeld_Gas = setTo;
+  if (event.keyCode === whichWarrior.controlKeyUp) {
+    whichWarrior.keyHeld_Gas = setTo;
   }
 
-  if (event.keyCode === whichCar.controlKeyDown) {
-    whichCar.keyHeld_Reverse = setTo;
+  if (event.keyCode === whichWarrior.controlKeyDown) {
+    whichWarrior.keyHeld_Reverse = setTo;
   }
-  return whichCar;
+  return whichWarrior;
 }
 
 
-export function keyPressed(event, whichCar) {
-  whichCar = keySet(event, true, whichCar) 
+export function keyPressed(event, whichWarrior) {
+  whichWarrior = keySet(event, true, whichWarrior) 
   event.preventDefault();
-  return whichCar;
+  return whichWarrior;
 }
 
-export function keyReleased(event, whichCar) {
-  whichCar = keySet(event, false, whichCar) 
+export function keyReleased(event, whichWarrior) {
+  whichWarrior = keySet(event, false, whichWarrior) 
   event.preventDefault();
-  return whichCar;
+  return whichWarrior;
 }

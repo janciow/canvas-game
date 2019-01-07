@@ -1,3 +1,3 @@
-export var carPic = document.createElement('img');
-export var carPic2 = document.createElement('img');
-export const trackPics = [];
+export var WarriorPic = document.createElement('img');
+export var WarriorPic2 = document.createElement('img');
+export const WorldPics = [];
